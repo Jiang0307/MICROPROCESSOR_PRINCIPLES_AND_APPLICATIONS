@@ -1,0 +1,50 @@
+#include "xc.inc"
+GLOBAL _divide
+    
+PSECT mytext, local, class=CODE, reloc=2
+
+_divide:
+    CLRF 0x010		  ;remainder high
+    MOVFF 0x001, 0x011  ;ARG0:remainder low
+    MOVFF 0x003 , 0x012 ;ARG1:divisor
+    
+    MOVLW 8
+    MOVWF TRISA
+    STEP_1:
+	RLCF 0x011
+	RLCF 0x010
+	BCF 0x011,0
+    LOOP:
+	MOVFF 0x012,WREG
+	SUBWF 0x010,F
+	BN REMAINDER_LESS_THAN_ZERO
+;	BCF STATUS,C
+	RLCF 0x011
+	RLCF 0x010
+	BSF 0x011,0
+	GOTO CHECK_CONTINUE
+	REMAINDER_LESS_THAN_ZERO:
+	    MOVFF 0x012,WREG
+	    ADDWF 0x010,F
+
+;	    BCF STATUS,C
+	    RLCF 0x011
+	    RLCF 0x010
+	    BCF 0x011,0
+	    GOTO CHECK_CONTINUE
+
+	CHECK_CONTINUE:
+	    DECF TRISA
+	    BNZ LOOP
+	    GOTO TERMINATE
+	    
+TERMINATE:
+    RRCF 0x010
+    BCF 0x010,7
+    
+    MOVFF 0x010,WREG
+    MOVWF 0x001
+    MOVFF 0x011,WREG
+    MOVWF 0x002
+    RETURN
+	    

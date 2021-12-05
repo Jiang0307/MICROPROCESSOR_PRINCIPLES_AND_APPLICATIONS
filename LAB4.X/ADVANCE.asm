@@ -1,0 +1,45 @@
+LIST p=18f4520
+#include <p18f4520.inc>
+    CONFIG OSC = INTIO67 
+    CONFIG WDT = OFF 
+    ORG 0x00
+
+Initial:
+    NUM EQU D'9'
+    MOVLF MACRO literal,F
+	MOVLW literal
+	MOVWF F
+	CLRF WREG
+    ENDM
+    
+start:
+    MOVLF 0x000,0x010
+    MOVLF 0x001,0x011
+    MOVLW NUM
+    DECF WREG
+    DECF WREG
+    MOVWF TRISA ;COUNTER
+    LFSR 0,0x012
+    RCALL fib
+    RCALL FINISH
+fib:
+    NOP
+    MOVF POSTDEC0,F
+    MOVF POSTDEC0,F
+    MOVFF POSTINC0,WREG
+    ADDWF POSTINC0,W
+    MOVFF WREG,POSTINC0
+   
+    MOVLW 0x1C
+    DECFSZ TRISA
+    MOVWF PCL
+    RETURN
+    
+FINISH:
+    END
+
+
+
+
+
+
