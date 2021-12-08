@@ -159,7 +159,8 @@ PRESS:
 
         FINISH_SPIN:
                 BCF CCP1CON, DC1B0
-                RETURN
+                DELAY D'20',D'50'
+                GOTO PRESS
 
 NEVER_END:
         END
