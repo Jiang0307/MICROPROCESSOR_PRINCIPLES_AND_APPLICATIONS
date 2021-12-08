@@ -96,8 +96,6 @@ INITIAL:
         CLRF TRISD             ; clear output
         CLRF LATD              ; RD0 ~ RD3 : output (TRISD = 0000_0000)
         
-        ;CLRF PORTB
-        ;CLRF LATB
         CLRF TRISC
         CLRF LATC
         
@@ -123,8 +121,8 @@ INITIAL:
         MOVWF CCP1CON
 
         ;SET DUTY CYCLE TO 500US (-90 degree)
-        BCF CCP1CON, DC1B1
-        BCF CCP1CON, DC1B0
+        BSF CCP1CON, DC1B1
+        BSF CCP1CON, DC1B0
         MOVLW D'4'
         MOVWF CCPR1L
        
@@ -135,11 +133,10 @@ START:
     
 PRESS:
         COMF LATD
-        ;MOVLF D'4',CCPR1L
     
         LOOP1:
                 INCF CCPR1L
-                DELAY D'20',D'20'
+                DELAY D'20',D'2'
                 MOVLW D'18'
                 CPFSEQ CCPR1L
                 GOTO LOOP1
@@ -147,19 +144,19 @@ PRESS:
 
         SPIN_BACK:
                 CLRF LATD
-                DELAY D'20',D'50'
+                DELAY D'120',D'30'
                 MOVLF D'18',CCPR1L
                 LOOP2:
                         DECF CCPR1L
-                        DELAY D'20',D'20'
-                        MOVLW D'4'
+                        DELAY D'20',D'2'
+                        MOVLW D'3'
                         CPFSEQ CCPR1L
                         GOTO LOOP2
                         GOTO FINISH_SPIN
 
         FINISH_SPIN:
-                BCF CCP1CON, DC1B0
-                DELAY D'20',D'50'
+                ;BCF CCP1CON, DC1B0
+                DELAY D'120',D'30'
                 GOTO PRESS
 
 NEVER_END:
