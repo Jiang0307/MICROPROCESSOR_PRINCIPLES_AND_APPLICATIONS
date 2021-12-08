@@ -79,9 +79,9 @@ ISR:
 
 START:
     OCCUR EQU 0x000
-    CLRF TRISB     ; RB0 : input
-    CLRF TRISD	    ; clear output
-    CLRF LATD	    ; RD0 ~ RD3 : output (TRISD = 0000_0000)
+    CLRF TRISB          ; RB0 : input
+    CLRF TRISD          ; clear output
+    CLRF LATD           ; RD0 ~ RD3 : output (TRISD = 0000_0000)
 
     BSF INTCON , GIE
     BSF RCON , IPEN

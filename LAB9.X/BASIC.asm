@@ -1,84 +1,163 @@
-#INCLUDE "P18F4520.INC"
+#include "P18F4520.INC"
 ; CONFIG1H
-CONFIG  OSC = INTIO67         ; Oscillator Selection bits (Internal oscillator block, port function on RA6 and RA7)
-CONFIG  FCMEN = OFF           ; Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor disabled)
-CONFIG  IESO = OFF            ; Internal/External Oscillator Switchover bit (Oscillator Switchover mode disabled)
+  CONFIG  OSC = INTIO67         ; OSCILLATOR SELECTION BITS (INTERNAL OSCILLATOR BLOCK, PORT FUNCTION ON RA6 AND RA7)
+  CONFIG  FCMEN = OFF           ; FAIL-SAFE CLOCK MONITOR ENABLE BIT (FAIL-SAFE CLOCK MONITOR DISABLED)
+  CONFIG  IESO = OFF            ; INTERNAL/EXTERNAL OSCILLATOR SWITCHOVER BIT (OSCILLATOR SWITCHOVER MODE DISABLED)
 ; CONFIG2L
-CONFIG  PWRT = OFF            ; Power-up Timer Enable bit (PWRT disabled)
-CONFIG  BOREN = SBORDIS       ; Brown-out Reset Enable bits (Brown-out Reset enabled in hardware only (SBOREN is disabled))
-CONFIG  BORV = 3              ; Brown Out Reset Voltage bits (Minimum setting)
+  CONFIG  PWRT = OFF            ; POWER-UP TIMER ENABLE BIT (PWRT DISABLED)
+  CONFIG  BOREN = ON            ; BROWN-OUT RESET ENABLE BITS (BROWN-OUT RESET ENABLED AND CONTROLLED BY SOFTWARE (SBOREN IS ENABLED))
+  CONFIG  BORV = 3              ; BROWN OUT RESET VOLTAGE BITS (MINIMUM SETTING)
 ; CONFIG2H
-CONFIG  WDT = OFF             ; Watchdog Timer Enable bit (WDT disabled (control is placed on the SWDTEN bit))
-CONFIG  WDTPS = 32768         ; Watchdog Timer Postscale Select bits (1:32768)
+  CONFIG  WDT = OFF             ; WATCHDOG TIMER ENABLE BIT (WDT DISABLED (CONTROL IS PLACED ON THE SWDTEN BIT))
+  CONFIG  WDTPS = 32768         ; WATCHDOG TIMER POSTSCALE SELECT BITS (1:32768)
 ; CONFIG3H
-CONFIG  CCP2MX = PORTC        ; CCP2 MUX bit (CCP2 input/output is multiplexed with RC1)
-CONFIG  PBADEN = OFF          ; PORTB A/D Enable bit (PORTB<4:0> pins are configured as digital I/O on Reset)
-CONFIG  LPT1OSC = OFF         ; Low-Power Timer1 Oscillator Enable bit (Timer1 configured for higher power operation)
-CONFIG  MCLRE = ON            ; MCLR Pin Enable bit (MCLR pin enabled; RE3 input pin disabled)
+  CONFIG  CCP2MX = PORTC        ; CCP2 MUX BIT (CCP2 INPUT/OUTPUT IS MULTIPLEXED WITH RC1)
+  CONFIG  PBADEN = OFF          ; PORTB A/D ENABLE BIT (PORTB<4:0> PINS ARE CONFIGURED AS DIGITAL I/O ON RESET)
+  CONFIG  LPT1OSC = OFF         ; LOW-POWER TIMER1 OSCILLATOR ENABLE BIT (TIMER1 CONFIGURED FOR HIGHER POWER OPERATION)
+  CONFIG  MCLRE = ON            ; MCLR PIN ENABLE BIT (MCLR PIN ENABLED; RE3 INPUT PIN DISABLED)
 ; CONFIG4L
-CONFIG  STVREN = ON           ; Stack Full/Underflow Reset Enable bit (Stack full/underflow will cause Reset)
-CONFIG  LVP = OFF             ; Single-Supply ICSP Enable bit (Single-Supply ICSP disabled)
-CONFIG  XINST = OFF           ; Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled (Legacy mode))
+  CONFIG  STVREN = ON           ; STACK FULL/UNDERFLOW RESET ENABLE BIT (STACK FULL/UNDERFLOW WILL CAUSE RESET)
+  CONFIG  LVP = OFF             ; SINGLE-SUPPLY ICSP ENABLE BIT (SINGLE-SUPPLY ICSP DISABLED)
+  CONFIG  XINST = OFF           ; EXTENDED INSTRUCTION SET ENABLE BIT (INSTRUCTION SET EXTENSION AND INDEXED ADDRESSING MODE DISABLED (LEGACY MODE))
 ; CONFIG5L
-CONFIG  CP0 = OFF             ; Code Protection bit (Block 0 (000800-001FFFh) not code-protected)
-CONFIG  CP1 = OFF             ; Code Protection bit (Block 1 (002000-003FFFh) not code-protected)
-CONFIG  CP2 = OFF             ; Code Protection bit (Block 2 (004000-005FFFh) not code-protected)
-CONFIG  CP3 = OFF             ; Code Protection bit (Block 3 (006000-007FFFh) not code-protected)
+  CONFIG  CP0 = OFF             ; CODE PROTECTION BIT (BLOCK 0 (000800-001FFFH) NOT CODE-PROTECTED)
+  CONFIG  CP1 = OFF             ; CODE PROTECTION BIT (BLOCK 1 (002000-003FFFH) NOT CODE-PROTECTED)
+  CONFIG  CP2 = OFF             ; CODE PROTECTION BIT (BLOCK 2 (004000-005FFFH) NOT CODE-PROTECTED)
+  CONFIG  CP3 = OFF             ; CODE PROTECTION BIT (BLOCK 3 (006000-007FFFH) NOT CODE-PROTECTED)
 ; CONFIG5H
-CONFIG  CPB = OFF             ; Boot Block Code Protection bit (Boot block (000000-0007FFh) not code-protected)
-CONFIG  CPD = OFF             ; Data EEPROM Code Protection bit (Data EEPROM not code-protected)
+  CONFIG  CPB = OFF             ; BOOT BLOCK CODE PROTECTION BIT (BOOT BLOCK (000000-0007FFH) NOT CODE-PROTECTED)
+  CONFIG  CPD = OFF             ; DATA EEPROM CODE PROTECTION BIT (DATA EEPROM NOT CODE-PROTECTED)
 ; CONFIG6L
-CONFIG  WRT0 = OFF            ; Write Protection bit (Block 0 (000800-001FFFh) not write-protected)
-CONFIG  WRT1 = OFF            ; Write Protection bit (Block 1 (002000-003FFFh) not write-protected)
-CONFIG  WRT2 = OFF            ; Write Protection bit (Block 2 (004000-005FFFh) not write-protected)
-CONFIG  WRT3 = OFF            ; Write Protection bit (Block 3 (006000-007FFFh) not write-protected)
+  CONFIG  WRT0 = OFF            ; WRITE PROTECTION BIT (BLOCK 0 (000800-001FFFH) NOT WRITE-PROTECTED)
+  CONFIG  WRT1 = OFF            ; WRITE PROTECTION BIT (BLOCK 1 (002000-003FFFH) NOT WRITE-PROTECTED)
+  CONFIG  WRT2 = OFF            ; WRITE PROTECTION BIT (BLOCK 2 (004000-005FFFH) NOT WRITE-PROTECTED)
+  CONFIG  WRT3 = OFF            ; WRITE PROTECTION BIT (BLOCK 3 (006000-007FFFH) NOT WRITE-PROTECTED)
 ; CONFIG6H
-CONFIG  WRTC = OFF            ; Configuration Register Write Protection bit (Configuration registers (300000-3000FFh) not write-protected)
-CONFIG  WRTB = OFF            ; Boot Block Write Protection bit (Boot block (000000-0007FFh) not write-protected)
-CONFIG  WRTD = OFF            ; Data EEPROM Write Protection bit (Data EEPROM not write-protected)
+  CONFIG  WRTC = OFF            ; CONFIGURATION REGISTER WRITE PROTECTION BIT (CONFIGURATION REGISTERS (300000-3000FFH) NOT WRITE-PROTECTED)
+  CONFIG  WRTB = OFF            ; BOOT BLOCK WRITE PROTECTION BIT (BOOT BLOCK (000000-0007FFH) NOT WRITE-PROTECTED)
+  CONFIG  WRTD = OFF            ; DATA EEPROM WRITE PROTECTION BIT (DATA EEPROM NOT WRITE-PROTECTED)
 ; CONFIG7L
-CONFIG  EBTR0 = OFF           ; Table Read Protection bit (Block 0 (000800-001FFFh) not protected from table reads executed in other blocks)
-CONFIG  EBTR1 = OFF           ; Table Read Protection bit (Block 1 (002000-003FFFh) not protected from table reads executed in other blocks)
-CONFIG  EBTR2 = OFF           ; Table Read Protection bit (Block 2 (004000-005FFFh) not protected from table reads executed in other blocks)
-CONFIG  EBTR3 = OFF           ; Table Read Protection bit (Block 3 (006000-007FFFh) not protected from table reads executed in other blocks)
+  CONFIG  EBTR0 = OFF           ; TABLE READ PROTECTION BIT (BLOCK 0 (000800-001FFFH) NOT PROTECTED FROM TABLE READS EXECUTED IN OTHER BLOCKS)
+  CONFIG  EBTR1 = OFF           ; TABLE READ PROTECTION BIT (BLOCK 1 (002000-003FFFH) NOT PROTECTED FROM TABLE READS EXECUTED IN OTHER BLOCKS)
+  CONFIG  EBTR2 = OFF           ; TABLE READ PROTECTION BIT (BLOCK 2 (004000-005FFFH) NOT PROTECTED FROM TABLE READS EXECUTED IN OTHER BLOCKS)
+  CONFIG  EBTR3 = OFF           ; TABLE READ PROTECTION BIT (BLOCK 3 (006000-007FFFH) NOT PROTECTED FROM TABLE READS EXECUTED IN OTHER BLOCKS)
 ; CONFIG7H
-CONFIG  EBTRB = OFF           ; Boot Block Table Read Protection bit (Boot block (000000-0007FFh) not protected from table reads executed in other blocks)
+  CONFIG  EBTRB = OFF           ; BOOT BLOCK TABLE READ PROTECTION BIT (BOOT BLOCK (000000-0007FFH) NOT PROTECTED FROM TABLE READS EXECUTED IN OTHER BLOCKS)
 
-INITIAL:  
-        ORG 0X000
-        BRA START
- 
-START:
-        BSF TRISB, 0
+  ORG 0x000
+  GOTO INITIAL
+  
+  
+MACROS:
+        MOVLF MACRO LITERAL,ADDRESS
+                MOVLW LITERAL
+                MOVWF ADDRESS
+                CLRF WREG
+        ENDM
+  
+        DELAY MACRO NUM_OUT, NUM_IN
+                LOCAL OUTERLOOP
+                LOCAL INNERLOOP
+                MOVFF WREG, 0X04
+                MOVLW NUM_OUT
+                MOVWF 0X14
+        OUTERLOOP:
+                MOVLW NUM_IN
+                MOVWF 0X03
+        INNERLOOP:
+                NOP
+                NOP
+                NOP
+                DECFSZ 0X03, 1, 0
+                BRA INNERLOOP
+                DECFSZ 0X14, 1, 0
+                BRA OUTERLOOP
+                MOVFF 0X04, WREG
+         ENDM
+    
+ISR:
+        ORG 0x008
+        BCF INTCON,INT0IF ;INT0 external interrupt flag bit
+        BCF INTCON,INT0IE ;INT0 external interrupt enable bit
+        CALL PRESS
+        BSF INTCON , INT0IE
+        RETFIE    
+    
+INITIAL:
+        ;SET INTERUPTS
         BSF INTCON, INT0IE
         BSF RCON, IPEN
         BSF INTCON, GIE
         
-        MOVLW B'00000110'  
-        MOVWF T2CON
-
-        BCF OSCCON, 6 ; F=125KHZ
-        BCF OSCCON, 5
-        BSF OSCCON, 4
+        CLRF TRISB            
+        BSF TRISB,0             ; RB0 : input
+        CLRF TRISD             ; clear output
+        CLRF LATD              ; RD0 ~ RD3 : output (TRISD = 0000_0000)
         
+        ;CLRF PORTB
+        ;CLRF LATB
+        CLRF TRISC
+        CLRF LATC
+        
+         ;TURN ON TMR2 & SET PRE-SCALER TO 4
+        BCF T2CON, T2CKPS1
+        BSF T2CON, T2CKPS0
+        BSF T2CON, TMR2ON 
+
+        ;SET RB0 TO DIGITAL INPUT
+        ;CLRF ADCON1
+        ;BSF ADCON1, PCFG2
+
+        ;SET OSCILLATOR TO 125KHZ
+        BCF OSCCON, IRCF2
+        BCF OSCCON, IRCF1
+        BSF OSCCON, IRCF0
+
+        MOVLW D'155' ; SET PERIOD
+        MOVWF PR2
+
+        ;SET CCP1 TO PWM & SET P1A TO SINGLE OUTPUT
         MOVLW B'00001100'
         MOVWF CCP1CON
-        
-        MOVLW 0x9B ; SET PERIOD
-        MOVWF PR2
-        
-        CALL SETDEGREE
-        BCF TRISC, 2
-        GOTO MAIN
 
-SETDEGREE:
+        ;SET DUTY CYCLE TO 500US (-90 degree)
+        BCF CCP1CON, DC1B1
+        BCF CCP1CON, DC1B0
         MOVLW D'4'
         MOVWF CCPR1L
-        RETURN
+       
+        GOTO START
+   
+START:
+        GOTO START
+    
+PRESS:
+        COMF LATD
+        ;MOVLF D'4',CCPR1L
+    
+        LOOP1:
+                INCF CCPR1L
+                DELAY D'20',D'20'
+                MOVLW D'18'
+                CPFSEQ CCPR1L
+                GOTO LOOP1
+                GOTO SPIN_BACK
 
+        SPIN_BACK:
+                CLRF LATD
+                DELAY D'20',D'50'
+                MOVLF D'18',CCPR1L
+                LOOP2:
+                        DECF CCPR1L
+                        DELAY D'20',D'20'
+                        MOVLW D'4'
+                        CPFSEQ CCPR1L
+                        GOTO LOOP2
+                        GOTO FINISH_SPIN
 
-MAIN:
-        GOTO MAIN
+        FINISH_SPIN:
+                BCF CCP1CON, DC1B0
+                RETURN
 
 NEVER_END:
         END
