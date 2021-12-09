@@ -155,7 +155,6 @@ PRESS:
                         GOTO FINISH_SPIN
 
         FINISH_SPIN:
-                ;BCF CCP1CON, DC1B0
                 DELAY D'120',D'30'
                 GOTO PRESS
 
