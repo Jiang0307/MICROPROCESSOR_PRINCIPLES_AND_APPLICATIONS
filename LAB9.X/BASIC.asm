@@ -58,26 +58,25 @@ MACROS:
         DELAY MACRO NUM_OUT, NUM_IN
                 LOCAL OUTERLOOP
                 LOCAL INNERLOOP
-                MOVFF WREG, 0X04
+                MOVFF WREG, 0x04
                 MOVLW NUM_OUT
-                MOVWF 0X14
+                MOVWF 0x14
         OUTERLOOP:
                 MOVLW NUM_IN
-                MOVWF 0X03
-        INNERLOOP:
-                NOP
-                NOP
-                NOP
-                DECFSZ 0X03, 1, 0
-                BRA INNERLOOP
-                DECFSZ 0X14, 1, 0
-                BRA OUTERLOOP
-                MOVFF 0X04, WREG
+                MOVWF 0x03
+                INNERLOOP:
+                        NOP
+                        NOP
+                        NOP
+                        DECFSZ 0x03, 1, 0
+                        BRA INNERLOOP
+                        DECFSZ 0x14, 1, 0
+                        BRA OUTERLOOP
+                        MOVFF 0x04, WREG
          ENDM
     
 ISR:
         ORG 0x008
-        BCF INTCON,INT0IF ;INT0 external interrupt flag bit
         BCF INTCON,INT0IE ;INT0 external interrupt enable bit
         CALL PRESS
         DELAY D'20',D'50'
@@ -129,7 +128,6 @@ START:
     
 PRESS:
         COMF LATD
-    
         LOOP1:
                 INCF CCPR1L
                 DELAY D'20',D'2'
@@ -137,7 +135,6 @@ PRESS:
                 CPFSEQ CCPR1L
                 GOTO LOOP1
                 GOTO SPIN_BACK
-
         SPIN_BACK:
                 CLRF LATD
                 DELAY D'120',D'30'
@@ -149,7 +146,6 @@ PRESS:
                         CPFSEQ CCPR1L
                         GOTO LOOP2
                         GOTO FINISH_SPIN
-
         FINISH_SPIN:
                 BCF CCP1CON, DC1B0
                 RETURN
