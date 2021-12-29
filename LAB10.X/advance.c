@@ -26,7 +26,6 @@ void __interrupt(high_priority) HI_ISR()
 {
     int value_H = ADRESH;
     int value_L = ADRESL;
-    
     int value = value_H * 256 + value_L;
     
     if(value < 102)
@@ -60,7 +59,7 @@ void __interrupt(high_priority) HI_ISR()
 
 void main(void) 
 {
-    OSCCONbits.IRCF = 0b110; // osc = 1MHZ
+    OSCCONbits.IRCF = 0b110; // osc = 4MHZ
     TRISAbits.RA0 = 1; // analog input port
     TRISD = 0; 
     LATD = 0;  
