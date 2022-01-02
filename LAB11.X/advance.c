@@ -59,7 +59,7 @@ void Mode2()
 {
     ClearBuffer();
     UART_Write_Text("enter mode 2\n");
-    long long int last_value = 0;
+    long long int last_value = 0 , count = 0;
     
     while(1)
     {
@@ -86,16 +86,21 @@ void Mode2()
         if( abs(value_int - last_value) > 5)
         {
             last_value = value_int;
-            
-            float value_float = (float)value_int * (float)500;
-            value_float = value_float / 1023;
-            value_int = (long long int)value_float;
+            if(count == 0)
+                continue;
+            else
+            {
+                float value_float = (float)value_int * (float)500;
+                value_float = value_float / 1023;
+                value_int = (long long int)value_float;
 
-            value_float = (float)value_int / (float)100;
-            sprintf(output,"%.2f",value_float);
-            output[4] = ' ';
-            UART_Write_Text(output);   
+                value_float = (float)value_int / (float)100;
+                sprintf(output,"%.2f",value_float);
+                output[4] = ' ';
+                UART_Write_Text(output);   
+            }
         }
+        count++;
     }
 
     return ;
