@@ -3,6 +3,15 @@
 char buffer[20];
 int lenStr = 0;
 
+void delay(int num)
+{
+    int i = 0;
+    while(i<num)
+        i++;
+    return;
+}
+
+
 void UART_Initialize() 
 {
     TRISCbits.TRISC6 = 1;
@@ -82,6 +91,8 @@ char *GetString()
         }
         RCIF = 0;
         unsigned char c = RCREG;
+        if(c == '\0')
+            break;
         if(c == '\r' || c=='\n')
         {
             UART_Write('\r');
@@ -92,6 +103,7 @@ char *GetString()
             buffer[i] = c;
             UART_Write(c);
         }
+        delay(2);
     }
     return buffer;
 }

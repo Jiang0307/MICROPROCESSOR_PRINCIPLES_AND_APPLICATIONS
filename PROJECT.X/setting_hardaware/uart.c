@@ -1,3 +1,5 @@
+#include <xc.h>
+#include <string.h>
 #pragma config OSC = INTIO67      // Oscillator Selection bits (HS oscillator)
 #pragma config FCMEN = OFF      // Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor disabled)
 #pragma config IESO = ON       // Internal/External Oscillator Switchover bit (Oscillator Switchover mode disabled)
@@ -32,107 +34,109 @@
 #pragma config EBTR3 = OFF      // Table Read Protection bit (Block 3 (006000-007FFFh) not protected from table reads executed in other blocks)
 #pragma config EBTRB = OFF      // Boot Block Table Read Protection bit (Boot block (000000-0007FFh) not protected from table reads executed in other blocks)
 
-#include <stdlib.h>
-#include <pic18f4520.h>
-#include "setting_hardaware/uart.h"
-#include <stdio.h>
-#include <string.h>
+char mystring[20];
+int lenStr = 0;
 
-char str[20];
-
-void Mode1()
+void UART_Initialize() 
 {
-    ClearBuffer();
-    UART_Write_Text("enter mode 1\n"); // TODO
+    TRISCbits.TRISC6 = 1;            
+    TRISCbits.TRISC7 = 1;            
+    OSCCONbits.IRCF2 = 0;
+    OSCCONbits.IRCF1 = 1;
+    OSCCONbits.IRCF0 = 1;  
+    /*  Setting baud rate */
+    TXSTAbits.SYNC = 0;           
+    BAUDCONbits.BRG16 = 0;          
+    TXSTAbits.BRGH = 0;
+    SPBRG = 12;      
+   //   Serial enable
+    RCSTAbits.SPEN = 1;              
+    PIR1bits.TXIF = 0;
+    PIR1bits.RCIF = 0;
+    TXSTAbits.TXEN = 1;           
+    RCSTAbits.CREN = 1;             
+    PIE1bits.TXIE = 1;       
+    IPR1bits.TXIP = 1;             
+    PIE1bits.RCIE = 1;              
+    IPR1bits.RCIP = 1;    
+}
+
+void UART_Write(unsigned char data)  // Output on Terminal
+{
+    while(!TXSTAbits.TRMT);
+    TXREG = data;              //write to TXREG will send data 
+}
+
+char *GetString()
+{
+    strcpy(mystring,"");
+
+    int i=0;
+    while(i<20)
+    {
+        while(!RCIF);
+        RCIF = 0;
+        unsigned char c = RCREG;
+        UART_Write(c);
+        if(c == '\r')
+        {
+            UART_Write('\n');
+            return mystring;
+        }
+        mystring[i++] = RCREG;        
+    }
+    return mystring;
+}
+
+void UART_Write_Text(char* text) // Output on Terminal, limit:10 chars
+{ 
+    for(int i=0;text[i]!='\0';i++)
+    {
+        while(!TXSTAbits.TRMT)
+        {
+            ;
+        }
+        TXREG = text[i]; 
+    }
+    
+//    for(int i=0;text[i]!='\0';i++)
+//        UART_Write(text[i]);
+}
+
+void ClearBuffer()
+{
+    for(int i = 0; i < 10 ; i++)
+        mystring[i] = '\0';
+    lenStr = 0;
+}
+
+void MyusartRead()
+{
+    while(!RCIF);
+    RCIF = 0;
+    unsigned char c = RCREG;
+    if(c == '\r')
+    {
+        UART_Write('\n');
+    }
+    UART_Write(c);
     return ;
 }
 
-void Delay(int num)
+// void interrupt low_priority Lo_ISR(void)
+void __interrupt(low_priority)  Lo_ISR(void)
 {
-    int i = 0;
-    while(i<num)
-        i++;
-    return;
-}
-
-void Mode2()
-{
-    ClearBuffer();
-    UART_Write_Text("enter mode 2\n");
-    long long int last_value = 0 , count = 0;
-    
-    while(1)
+    if(RCIF)
     {
-        PIR1bits.ADIF = 0;
-        ADCON0bits.GO = 1; //after conversion flag bit = 1
-        Delay(100);
-        if(RCIF == 1)
+        if(RCSTAbits.OERR)
         {
-            RCIF = 0;
-            unsigned char c = RCREG;
-            if(c == 'e')
-            {
-                UART_Write(c);
-                UART_Write('\n');                
-                ADCON0bits.GO = 0;
-                return;
-            }
+            CREN = 0;
+            Nop();
+            CREN = 1;
         }
-        char output[5];
-        long long int value_H = ADRESH;
-        long long int value_L = ADRESL;
-        long long int value_int = value_H * 256 + value_L;
-
-        if( abs(value_int - last_value) > 5)
-        {
-            last_value = value_int;
-            if(count == 0)
-                continue;
-            else
-            {
-                float value_float = (float)value_int * (float)500;
-                value_float = value_float / 1023;
-                value_int = (long long int)value_float;
-
-                value_float = (float)value_int / (float)100;
-                sprintf(output,"%.2f",value_float);
-                output[4] = ' ';
-                UART_Write_Text(output);   
-            }
-        }
-        count++;
+        MyusartRead();
     }
-    return ;
-}
-
-void main(void) 
-{
-    UART_Initialize();
-    VR_Initialize();
-    while(1)
-    {
-        ClearBuffer();
-        strcpy(str , GetString() );
-        if(strcmp(str,"mode1")==0)
-        {
-            Mode1();
-            ClearBuffer();
-        }
-        else if(strcmp(str,"mode2")==0)
-        {
-            Mode2();
-            ClearBuffer();
-        }
-        else if(strcmp(str,"\r\n")==0)
-        {
-            UART_Write_Text("rrrnnn\r\n");   
-            ClearBuffer();
-        }
-    }
-    return;
-}
-
-void __interrupt(high_priority) Hi_ISR(void)
-{
     
+   // process other interrupt sources here, if required
+    return;
 }

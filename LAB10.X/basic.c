@@ -28,39 +28,63 @@ void __interrupt(high_priority) HI_ISR()
     int value_L = ADRESL;
     
     int value = value_H * 256 + value_L;
+    value = value * 180;
+    value = value / 1024;
     
-    if(value < 64)
-        LATD = 0b00000000;
-    else if (value < 128)
-        LATD = 0b00001000;
-    else if (value < 192)
-        LATD = 0b00000100;
-    else if (value < 256)
-        LATD = 0b00001100;
-    else if (value < 320)
-        LATD = 0b00000010;
-    else if (value < 384)
-        LATD = 0b00001010;
-    else if (value < 448)
-        LATD = 0b00000110;
-    else if (value < 512)
-        LATD = 0b00001110;
-    else if (value < 576)
+    if(0<=value && value < 45)
         LATD = 0b00000001;
-    else if (value < 640)
-        LATD = 0b00001001;
-    else if (value < 704)
-        LATD = 0b00000101;
-    else if (value < 768)
-        LATD = 0b00001101;
-    else if (value < 832)
+    else if(45<= value && value<90)
         LATD = 0b00000011;
-    else if (value < 896)
-        LATD = 0b00001011;
-    else if (value < 960)
+    else if(90<= value && value<135)
         LATD = 0b00000111;
-    else if (value < 1024)
+    else if(135<= value && value<180)
         LATD = 0b00001111;
+
+    int value2 = value_H * 256 + value_L;
+       
+    value2 = value2 * 14;
+    value2 = value2 / 1024;
+    value2 += 4;
+    PIR1bits.ADIF = 0;
+    
+    CCPR1L = value2;
+    CCP1CONbits.DC1B = 0b01;
+    
+    delay(3);
+    ADCON0bits.GO = 1;    
+    
+//    if(value < 64)
+//        
+//    else if (value < 128)
+//        LATD = 0b00001000;
+//    else if (value < 192)
+//        LATD = 0b00000100;
+//    else if (value < 256)
+//        LATD = 0b00001100;
+//    else if (value < 320)
+//        LATD = 0b00000010;
+//    else if (value < 384)
+//        LATD = 0b00001010;
+//    else if (value < 448)
+//        LATD = 0b00000110;
+//    else if (value < 512)
+//        LATD = 0b00001110;
+//    else if (value < 576)
+//        LATD = 0b00000001;
+//    else if (value < 640)
+//        LATD = 0b00001001;
+//    else if (value < 704)
+//        LATD = 0b00000101;
+//    else if (value < 768)
+//        LATD = 0b00001101;
+//    else if (value < 832)
+//        LATD = 0b00000011;
+//    else if (value < 896)
+//        LATD = 0b00001011;
+//    else if (value < 960)
+//        LATD = 0b00000111;
+//    else if (value < 1024)
+//        LATD = 0b00001111;
     
     PIR1bits.ADIF = 0;
     
@@ -78,7 +102,7 @@ void main(void)
     LATD = 0;  
 
     // configure ADC module
-    ADCON0bits.CHS = 0b0000; // AN0?analog input
+    ADCON0bits.CHS = 0b0000; // AN0?analog input 
     ADCON0bits.ADON = 1;    
     
     ADCON1bits.VCFG0 = 0; // voltage reference
